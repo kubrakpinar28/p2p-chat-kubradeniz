@@ -48,7 +48,7 @@ function ChatPage() {
   useEffect(() => {
     if (!username || !receiver) return;
 
-    fetch(`https://backend-lj62.onrender.com/messages?user1=${username}&user2=${receiver}`)
+    fetch(https://backend-lj62.onrender.com/messages?user1=${username}&user2=${receiver})
       .then((res) => res.json())
       .then((data) => setChatLog(data))
       .catch((err) => console.error("Geçmiş mesajlar alınamadı:", err));
