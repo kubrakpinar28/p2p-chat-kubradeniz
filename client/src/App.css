@@ -1,38 +1,61 @@
+/* App.css */
+body {
+  background-color: #ffe6f0;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
 .page-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #ffe4ec; /* pembe arka plan */
-  font-family: 'Arial', sans-serif;
 }
 
 .form-box {
-  background-color: white;
+  background: white;
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  width: 350px;
   text-align: center;
 }
 
 input, select {
-  width: 90%;
+  width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
+  margin-top: 12px;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 button {
-  background-color: #ff69b4;
-  color: white;
+  margin-top: 15px;
   padding: 10px 20px;
+  background-color: #ff66b2;
+  color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #ff4794;
+.chat-box {
+  height: 200px;
+  overflow-y: auto;
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: #fff0f5;
+  border-radius: 6px;
+}
+
+.chat-left {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.chat-right {
+  text-align: right;
+  margin-bottom: 10px;
 }
