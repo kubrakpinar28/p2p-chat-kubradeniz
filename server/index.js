@@ -68,7 +68,7 @@ app.get("/messages", (req, res) => {
   });
 });
 
-// Yeni mesaj gönder
+// Mesaj gönder
 app.post("/send", (req, res) => {
   const { from, to, text } = req.body;
   const timestamp = new Date().toISOString();
@@ -77,7 +77,7 @@ app.post("/send", (req, res) => {
   db.run(query, [from, to, text, timestamp], function (err) {
     if (err) return res.status(500).json({ error: "Mesaj kaydedilemedi." });
 
-    // Socket.IO ile gerçek zamanlı gönderim
+    // 🔥 Gerçek zamanlı gönder
     io.emit("new_message", { from, to, text, timestamp });
 
     res.status(200).json({
@@ -87,7 +87,7 @@ app.post("/send", (req, res) => {
   });
 });
 
-// Socket.IO bağlantısı
+// Socket bağlantısı
 io.on("connection", (socket) => {
   console.log("Socket bağlı: " + socket.id);
 
