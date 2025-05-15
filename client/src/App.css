@@ -7,6 +7,38 @@
   font-family: 'Arial', sans-serif;
 }
 
+.chat-box {
+  border: 1px solid #ccc;
+  height: 200px;
+  padding: 10px;
+  overflow-y: auto;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.chat-message {
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  word-wrap: break-word;
+}
+
+.chat-message.sent {
+  align-self: flex-end;
+  background-color: #ffd1eb;
+  text-align: right;
+}
+
+.chat-message.received {
+  align-self: flex-start;
+  background-color: #e0e0e0;
+  text-align: left;
+}
+
+
+
 .form-box {
   background-color: white;
   padding: 30px;

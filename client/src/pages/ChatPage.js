@@ -72,9 +72,12 @@ function ChatPage() {
           ))}
         </select>
 
-        <div style={{ border: "1px solid #ccc", height: "200px", padding: "10px", overflowY: "auto", marginTop: "10px" }}>
+        <div className="chat-box">
           {chatLog.map((msg, index) => (
-            <div key={index}>
+            <div
+              key={index}
+              className={`chat-message ${msg.from === username ? 'sent' : 'received'}`}
+            >
               <strong>{msg.from} ➜ {msg.to}</strong>: {msg.text}
             </div>
           ))}

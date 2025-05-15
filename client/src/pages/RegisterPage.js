@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
 function RegisterPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,8 +16,13 @@ function RegisterPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
+
       const data = await response.json();
       setMessage(data.message);
+
+      if (response.ok) {
+        navigate('/'); // ✅ Hemen giriş ekranına yönlendir
+      }
     } catch (error) {
       console.error("Kayıt sırasında hata:", error);
       setMessage("Kayıt başarısız oldu.");
@@ -38,3 +45,4 @@ function RegisterPage() {
 }
 
 export default RegisterPage;
+
