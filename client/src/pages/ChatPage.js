@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io("https://backend-lj62.onrender.com"); // Backend URL'in
+// Socket bağlantısı sadece bir kez kurulmalı!
+const socket = io("https://backend-lj62.onrender.com");
 
 function ChatPage() {
   const [username] = useState(localStorage.getItem("username"));
@@ -10,6 +11,7 @@ function ChatPage() {
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState([]);
 
+  // ✅ Mesaj gönderme
   const handleSend = async () => {
     if (!receiver || !message.trim()) return;
 
@@ -17,32 +19,32 @@ function ChatPage() {
       const response = await fetch("https://backend-lj62.onrender.com/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sender: username, receiver, message })
+        body: JSON.stringify({ from: username, to: receiver, text: message }),
       });
 
-      if (!response.ok) throw new Error("Gönderim hatası");
-
+      if (!response.ok) throw new Error("Mesaj gönderilemedi");
       setMessage("");
-    } catch (error) {
-      console.error("Mesaj gönderilemedi:", error);
+    } catch (err) {
+      console.error("Gönderim hatası:", err);
     }
   };
 
-  // Mesajları anlık dinle
+  // ✅ Gerçek zamanlı mesaj alma
   useEffect(() => {
-    socket.on("new_message", (msg) => {
+    const handleIncomingMessage = (msg) => {
       if (
         (msg.from === username && msg.to === receiver) ||
         (msg.from === receiver && msg.to === username)
       ) {
         setChatLog((prev) => [...prev, msg]);
       }
-    });
+    };
 
-    return () => socket.off("new_message");
+    socket.on("new_message", handleIncomingMessage);
+    return () => socket.off("new_message", handleIncomingMessage);
   }, [receiver, username]);
 
-  // Geçmiş mesajları çek
+  // ✅ Mesaj geçmişi çekme
   useEffect(() => {
     if (!username || !receiver) return;
 
@@ -52,7 +54,7 @@ function ChatPage() {
       .catch((err) => console.error("Geçmiş mesajlar alınamadı:", err));
   }, [receiver, username]);
 
-  // Kullanıcı listesini getir
+  // ✅ Kullanıcı listesini çek
   useEffect(() => {
     if (!username) {
       window.location.href = "/";
