@@ -8,17 +8,17 @@ const db = require("./db");
 const app = express();
 const server = http.createServer(app);
 
-// 🔥 CORS ve JSON body middleware
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// 🔥 TEST: Ayakta mı
+// Test endpoint
 app.get("/", (req, res) => {
   res.send("Server ayakta!");
 });
 
-// 🔥 REGISTER ROTASI
+// Kullanıcı kayıt
 app.post("/register", (req, res) => {
   const { username, password } = req.body;
 
@@ -32,7 +32,7 @@ app.post("/register", (req, res) => {
   });
 });
 
-// 🔥 LOGIN ROTASI
+// Giriş işlemi
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
@@ -51,7 +51,27 @@ app.post("/login", (req, res) => {
   });
 });
 
-// 🔥 SOCKET.IO
+// Mesaj gönder
+app.post("/send", (req, res) => {
+  const { from, to, text } = req.body;
+  const timestamp = new Date().toISOString();
+
+  const query = "INSERT INTO messages (sender, receiver, message, timestamp) VALUES (?, ?, ?, ?)";
+  db.run(query, [from, to, text, timestamp], function (err) {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({ error: "Mesaj kaydedilemedi." });
+    }
+
+    // Mesajı geri döndür (önemli)
+    res.status(200).json({
+      message: "Mesaj gönderildi.",
+      data: { from, to, text, timestamp }
+    });
+  });
+});
+
+// Socket.IO (şimdilik aktif değil ama dursun)
 const io = socketIO(server, {
   cors: {
     origin: "*",
@@ -63,19 +83,14 @@ const io = socketIO(server, {
 io.on("connection", (socket) => {
   console.log("Yeni kullanıcı bağlandı: " + socket.id);
 
-  socket.on("signal", (data) => {
-    io.to(data.to).emit("signal", {
-      from: socket.id,
-      signal: data.signal
-    });
-  });
-
   socket.on("disconnect", () => {
     console.log("Kullanıcı ayrıldı: " + socket.id);
   });
 });
 
-// 🔥 SUNUCUYU BAŞLAT
+
+
+// Sunucuyu başlat
 server.listen(5000, () => {
   console.log("Sunucu çalışıyor: http://localhost:5000");
 });

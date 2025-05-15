@@ -6,18 +6,38 @@ function ChatPage() {
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState([]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!receiver || !message.trim()) return;
 
-    // Şimdilik sadece ekranda gösteriyoruz
-    const newMessage = {
-      from: username,
-      to: receiver,
-      text: message,
-    };
+    try {
+      const response = await fetch('https://backend-lj62.onrender.com/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sender: username,
+          receiver: receiver,
+          message: message,
+        }),
+      });
 
-    setChatLog((prev) => [...prev, newMessage]);
-    setMessage("");
+      const data = await response.json();
+
+      if (response.ok) {
+        setChatLog((prev) => [...prev, {
+          from: username,
+          to: receiver,
+          text: message,
+        }]);
+        setMessage("");
+      } else {
+        alert(data.error || "Mesaj gönderilemedi.");
+      }
+    } catch (error) {
+      console.error("Mesaj gönderme hatası:", error);
+      alert("Sunucu hatası: Mesaj gönderilemedi.");
+    }
   };
 
   useEffect(() => {

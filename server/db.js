@@ -23,3 +23,5 @@ db.serialize(() => {
 });
 
 module.exports = db;
+
+module.exports = db;

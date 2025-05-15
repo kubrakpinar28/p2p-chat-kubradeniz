@@ -10,9 +10,10 @@ function RegisterPage() {
   e.preventDefault();
 
   try {
-    const response = await fetch("https://fuzzy-points-cry.loca.lt/register", {
+    const response = await fetch('https://backend-lj62.onrender.com/register', {
 
-      method: 'POST',
+  method: 'POST',
+      
       headers: {
         'Content-Type': 'application/json',
       },
