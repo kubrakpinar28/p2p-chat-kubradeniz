@@ -7,7 +7,7 @@ function ChatPage() {
   const [receiver, setReceiver] = useState("");
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState([]);
-  const [userList, setUserList] = useState([]);
+
 
   const handleSend = async () => {
     if (!receiver || !message.trim()) return;
