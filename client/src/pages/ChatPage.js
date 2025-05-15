@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 
 function ChatPage() {
+  
   const [username] = useState(localStorage.getItem("username"));
+  const [userList, setUserList] = useState([]);
   const [receiver, setReceiver] = useState("");
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState([]);
+  const [userList, setUserList] = useState([]);
 
   const handleSend = async () => {
     if (!receiver || !message.trim()) return;
@@ -39,12 +42,27 @@ function ChatPage() {
       alert("Sunucu hatası: Mesaj gönderilemedi.");
     }
   };
+  useEffect(() => {
+  // Sayfa yüklendiğinde tüm kullanıcıları çek
+  const fetchUsers = async () => {
+    const res = await fetch("https://backend-lj62.onrender.com/users");
+    const data = await res.json();
+    setUserList(data.filter((u) => u.username !== username)); // Kendi adını filtrele
+  };
+  fetchUsers();
+}, [username]);
 
   useEffect(() => {
-    if (!username) {
-      window.location.href = "/";
-    }
-  }, [username]);
+  if (!username) {
+    window.location.href = "/";
+  }
+
+  // kullanıcıları çek
+  fetch("https://backend-lj62.onrender.com/users")
+    .then(res => res.json())
+    .then(data => setUserList(data));
+}, [username]);
+
 
   return (
     <div style={{ padding: "20px" }}>
@@ -74,4 +92,4 @@ function ChatPage() {
   );
 }
 
-export default ChatPage;
+export default ChatPage;
