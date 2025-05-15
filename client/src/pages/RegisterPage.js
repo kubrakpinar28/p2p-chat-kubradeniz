@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css'; // CSS dosyasını ekle
+import '../App.css'; // CSS dosyasını ekle
 
 function RegisterPage() {
   const [username, setUsername] = useState('');
