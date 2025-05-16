@@ -89,7 +89,8 @@ function ChatPage() {
               key={index}
               className={`chat-message ${msg.from === username ? 'sent' : 'received'}`}
             >
-              <strong>{msg.from} ➜ {msg.to}</strong>: {msg.text}
+              <strong>{msg.from} ➜ {msg.to}</strong>: {msg.message || msg.text}
+
             </div>
           ))}
         </div>
