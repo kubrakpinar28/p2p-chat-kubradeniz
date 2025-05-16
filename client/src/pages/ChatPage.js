@@ -11,6 +11,7 @@ function ChatPage() {
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState([]);
 
+  // ✅ Mesaj gönderme
   const handleSend = async () => {
     if (!receiver || !message.trim()) return;
     try {
@@ -19,6 +20,7 @@ function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ from: username, to: receiver, text: message }),
       });
+
       if (!response.ok) throw new Error("Mesaj gönderilemedi");
       setMessage("");
     } catch (err) {
@@ -26,6 +28,20 @@ function ChatPage() {
     }
   };
 
+  // ✅ Yeni bir kullanıcı seçilince eski mesajlar çekilsin
+  useEffect(() => {
+    if (!username || !receiver) return;
+
+    // Geçmişi temizle (önce)
+    setChatLog([]);
+
+    fetch(`https://backend-lj62.onrender.com/messages?user1=${username}&user2=${receiver}`)
+      .then((res) => res.json())
+      .then((data) => setChatLog(data))
+      .catch((err) => console.error("Geçmiş mesajlar alınamadı:", err));
+  }, [receiver, username]);
+
+  // ✅ Gerçek zamanlı gelen mesajlar
   useEffect(() => {
     const handleIncomingMessage = (msg) => {
       if (
@@ -35,23 +51,18 @@ function ChatPage() {
         setChatLog((prev) => [...prev, msg]);
       }
     };
+
     socket.on("new_message", handleIncomingMessage);
     return () => socket.off("new_message", handleIncomingMessage);
   }, [receiver, username]);
 
-  useEffect(() => {
-    if (!username || !receiver) return;
-    fetch(`https://backend-lj62.onrender.com/messages?user1=${username}&user2=${receiver}`)
-      .then((res) => res.json())
-      .then((data) => setChatLog(data))
-      .catch((err) => console.error("Geçmiş mesajlar alınamadı:", err));
-  }, [receiver, username]);
-
+  // ✅ Kullanıcı listesi
   useEffect(() => {
     if (!username) {
       window.location.href = "/";
       return;
     }
+
     fetch("https://backend-lj62.onrender.com/users")
       .then((res) => res.json())
       .then((data) => setUserList(data.filter((u) => u.username !== username)))
