@@ -54,7 +54,7 @@ app.get("/users", (req, res) => {
   });
 });
 
-// Geçmiş mesajları getir
+// Geçmiş mesajları getirir
 app.get("/messages", (req, res) => {
   const { user1, user2 } = req.query;
   const query = `
@@ -77,7 +77,7 @@ app.post("/send", (req, res) => {
   db.run(query, [from, to, text, timestamp], function (err) {
     if (err) return res.status(500).json({ error: "Mesaj kaydedilemedi." });
 
-    // 🔥 Gerçek zamanlı gönder
+    //Gerçek zamanlı gönderir 
     io.emit("new_message", { from, to, text, timestamp });
 
     res.status(200).json({
@@ -96,7 +96,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// Sunucu başlat
+// Sunucu başlatır
 server.listen(5000, () => {
   console.log("Sunucu çalışıyor: http://localhost:5000");
 });
